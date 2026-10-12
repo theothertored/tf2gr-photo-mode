@@ -1,7 +1,6 @@
 # TF2: Gold Rush photo mode
 
-A free camera for taking screenshots in TF2: Gold Rush on a local server: noclip flying with
-adjustable speed, FOV 10–120, camera tilt and a HUD toggle, entered and left with one command each.
+Camera control for taking screenshots in TF2: Gold Rush on a local server: scroll to adjust noclip speed, FOV and camera tilt.
 
 Downloads, setup and controls: **https://theothertored.github.io/tf2gr-photo-mode/**
 
