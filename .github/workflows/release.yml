@@ -1,0 +1,31 @@
+# Push a tag like v1.0 to publish a release with the download files the page links to.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build download files
+        run: |
+          mkdir dist
+          cp tf_goldrush/cfg/photomode.cfg tf_goldrush/cfg/photomode_off.cfg dist/
+          cp tf_goldrush/scripts/vscripts/photomode.nut dist/
+          cp tf_goldrush/screenshots/tga-to-png.bat dist/
+          zip -rX dist/tf2gr-photo-mode.zip tf_goldrush
+          zip -rX dist/tf2gr-photo-mode-no-sourceres.zip tf_goldrush -x 'tf_goldrush/addons/*'
+          zip -rX dist/SourceRes.zip tf_goldrush/addons
+          ls -l dist
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --title "$GITHUB_REF_NAME" --generate-notes

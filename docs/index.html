@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TF2: Gold Rush Photo Mode</title>
+  <meta name="description" content="Camera control for TF2: Gold Rush screenshots. Scroll to adjust noclip speed, FOV and camera tilt.">
+  <meta name="theme-color" content="#b8383b">
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="theothertored on GitHub">
+  <meta property="og:title" content="TF2: Gold Rush Photo Mode">
+  <meta property="og:description" content="Camera control for TF2: Gold Rush screenshots. Scroll to adjust noclip speed, FOV and camera tilt.">
+  <meta property="og:url" content="https://theothertored.github.io/tf2gr-photo-mode/">
+  <meta property="og:image" content="https://theothertored.github.io/tf2gr-photo-mode/og.jpg">
+  <meta property="og:image:alt" content="Screenshot taken in TF2: Gold Rush with Photo Mode">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #2b2622;
+      /* TF2 HUD panel brown */
+      --panel: #3a332d;
+      --line: #50473f;
+      --heading: #ece3cf;
+      /* HUD tan: headings, strong, keycaps */
+      --text: #d6ccb7;
+      /* body text, a step more muted */
+      --muted: #b6a990;
+      --red: #b8383b;
+      --red-hi: #cc4a4c;
+      --blu: #5885a2;
+      --blu-hi: #6896b4;
+      --focus: #f0c24b;
+      --measure: 64rem;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 400 1.0625rem/1.6 "Source Sans 3", system-ui, sans-serif;
+    }
+
+    a {
+      color: var(--text);
+      text-decoration-color: var(--muted);
+      text-underline-offset: 0.15em;
+    }
+
+    a:hover {
+      text-decoration-color: var(--text);
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+      border-radius: 3px;
+    }
+
+    /* ---- Hero: the screenshot is the page's one big thing ---- */
+    .hero {
+      position: relative;
+      background: #1e1a17;
+    }
+
+    .hero img {
+      display: block;
+      width: 100%;
+      max-height: 62vh;
+      object-fit: cover;
+    }
+
+    .hero .title {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 8rem 1rem 1.25rem;
+      /* darkens the bottom of the banner behind the title and fades into the page background */
+      background: linear-gradient(to bottom,
+          rgba(43, 38, 34, 0) 0%,
+          rgba(43, 38, 34, 0.6) 45%,
+          rgba(43, 38, 34, 0.9) 75%,
+          rgb(43, 38, 34) 100%);
+    }
+
+    .hero .title h1 {
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero.noimg .title h1 {
+      text-shadow: none;
+    }
+
+    .hero.noimg .title {
+      position: static;
+      padding-top: 3rem;
+      background: none;
+    }
+
+    .wrap {
+      max-width: var(--measure);
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    h1,
+    h2 {
+      color: var(--heading);
+      font-family: Oswald, "Arial Narrow", sans-serif;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: 0.01em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 7vw, 3.6rem);
+    }
+
+    h2 {
+      margin: 3rem 0 0.75rem;
+      font-size: 1.6rem;
+    }
+
+    .lede {
+      margin: 1.25rem 0 0;
+      font-size: 1.15rem;
+    }
+
+    /* ---- Downloads: RED is the full package, BLU leaves SourceRes out ---- */
+    .downloads {
+      margin: 1.75rem 0 0;
+    }
+
+    .big {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.7rem 1.1rem 0.6rem;
+      border-radius: 4px;
+      color: #fff;
+      text-decoration: none;
+      font: 500 1.15rem/1.2 Oswald, "Arial Narrow", sans-serif;
+      box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.25);
+    }
+
+    .btn small {
+      display: block;
+      font: 400 0.85rem/1.3 "Source Sans 3", sans-serif;
+      opacity: 0.85;
+    }
+
+    .btn.red {
+      background: var(--red);
+    }
+
+    .btn.red:hover {
+      background: var(--red-hi);
+    }
+
+    .btn.blu {
+      background: var(--blu);
+    }
+
+    .btn.blu:hover {
+      background: var(--blu-hi);
+    }
+
+    .files {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.9rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .files li+li {
+      margin-top: 0;
+    }
+
+    .files a {
+      display: inline-block;
+      padding: 0.3rem 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .files a:hover {
+      border-color: var(--muted);
+      background: var(--panel);
+    }
+
+    .downloads .intro {
+      margin: 0 0 1rem;
+      color: var(--text);
+      font-size: inherit;
+    }
+
+    .downloads p {
+      margin: 0.75rem 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ---- Body copy ---- */
+    p,
+    li {
+      max-width: var(--measure);
+    }
+
+    ol,
+    ul {
+      padding-left: 1.3rem;
+    }
+
+    li+li {
+      margin-top: 0.4rem;
+    }
+
+    main>ul>li+li,
+    main>ol>li+li {
+      margin-top: 0.75rem;
+    }
+
+    ul.note {
+      margin: 0.3rem 0 0;
+    }
+
+    ul.note li+li {
+      margin-top: 0.1rem;
+    }
+
+    strong {
+      color: var(--heading);
+      font-weight: 600;
+    }
+
+    code {
+      font-family: Consolas, "Cascadia Mono", ui-monospace, monospace;
+      font-size: 0.92em;
+      background: var(--panel);
+      padding: 0.08em 0.35em;
+      border-radius: 3px;
+      overflow-wrap: anywhere;
+    }
+
+    pre {
+      background: var(--panel);
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      line-height: 1.45;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    kbd {
+      display: inline-block;
+      min-width: 1.6em;
+      text-align: center;
+      padding: 0.05em 0.4em;
+      margin: 0.1em 0;
+      font: 600 0.88em/1.4 "Source Sans 3", sans-serif;
+      color: var(--bg);
+      background: var(--heading);
+      border-radius: 3px;
+      box-shadow: inset 0 -2px 0 var(--muted);
+      white-space: nowrap;
+    }
+
+    .note {
+      color: var(--muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.5rem 0 0;
+    }
+
+    th,
+    td {
+      text-align: left;
+      vertical-align: top;
+      padding: 0.5rem 0.75rem 0.5rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    td:first-child {
+      white-space: nowrap;
+    }
+
+    footer {
+      margin: 4rem 0 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 520px) {
+      td:first-child {
+        white-space: normal;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="hero" id="hero">
+    <img src="banner.jpg" width="1920" height="1080" alt="Screenshot taken in TF2: Gold Rush with Photo Mode" onerror="this.remove(); document.getElementById('hero').classList.add('noimg');">
+    <div class="title">
+      <div class="wrap">
+        <h1>TF2: Gold Rush Photo Mode</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p class="lede">
+      Camera controls for taking screenshots on a local server.<br />
+      <code>exec photomode</code> to start taking photos,<br />
+      <code>exec photomode_off</code> to return to normal.
+    </p>
+
+    <section class="downloads" aria-label="Downloads">
+      <p class="intro">Choose <strong>with SourceRes</strong> if you want to take screenshots in higher or unusual resolutions (e.g. 4K on a 1080p screen, phone wallpapers), <strong>without SourceRes</strong> otherwise. You can also download the individual files below.</p>
+      <div class="big">
+        <a class="btn red" href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/tf2gr-photo-mode.zip">Download ZIP<small>with SourceRes</small></a>
+        <a class="btn blu" href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/tf2gr-photo-mode-no-sourceres.zip">Download ZIP<small>without SourceRes</small></a>
+      </div>
+      <ul class="files">
+        <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/photomode.cfg">photomode.cfg</a></li>
+        <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/photomode_off.cfg">photomode_off.cfg</a></li>
+        <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/photomode.nut">photomode.nut</a></li>
+        <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/SourceRes.zip">SourceRes</a></li>
+        <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/tga-to-png.bat">tga-to-png.bat</a></li>
+      </ul>
+      <p>Latest release. <a href="https://github.com/theothertored/tf2gr-photo-mode">Source and older versions on GitHub</a>.</p>
+    </section>
+
+    <h2 id="setup">Setup</h2>
+    <ul>
+      <li>
+        Extract the ZIP into <code>steamapps\common\Team Fortress 2 Gold Rush\</code>. Here's where the files should land:<br>
+        <ul class="note">
+          <li><code>*.cfg</code> &rarr; <code>tf_goldrush\cfg\</code>,</li>
+          <li><code>photomode.nut</code> &rarr; <code>tf_goldrush\scripts\vscripts\</code>,</li>
+          <li><code>SourceRes.dll, SourceRes.vdf</code> &rarr; <code>tf_goldrush\addons\</code></li>
+          <li><code>tga-to-png.bat</code> &rarr; <code>tf_goldrush\screenshots\</code>.</li>
+        </ul>
+      </li>
+      <li>Check the binds in <code>photomode_off.cfg</code> match yours (see <a href="#keybinds">Keybinds</a>).</li>
+      <li><strong>For SourceRes only</strong>: add <code>-insecure -windowed</code> to Gold Rush's launch options. The console should print <code>SourceRes 2.1 loaded.</code> if it works.</li>
+    </ul>
+
+    <h2 id="usage">Usage</h2>
+    <p>Start a local server (for example <code>map pl_goldrush</code>), then open the console and run <code>exec photomode</code>. It needs your own server: it turns on <code>sv_cheats</code> and runs a server-side script.</p>
+    <p>Entering photo mode puts the round into the tournament “ready up” state, so no round timer runs, and pauses any timers on the map. It turns on noclip and hides the HUD and your weapon.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Keys</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><kbd>Ctrl</kbd> + scroll</td>
+          <td>FOV, 10–120 in steps of 5</td>
+        </tr>
+        <tr>
+          <td><kbd>Shift</kbd> + scroll</td>
+          <td>Fly speed: 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 15, 20</td>
+        </tr>
+        <tr>
+          <td><kbd>Alt</kbd> + scroll</td>
+          <td>Tilt the camera, ±45° in steps of 5°</td>
+        </tr>
+        <tr>
+          <td><kbd>Ctrl</kbd> / <kbd>Shift</kbd> / <kbd>Alt</kbd> + middle click</td>
+          <td>Reset the respective value to default</td>
+        </tr>
+        <tr>
+          <td><kbd>L</kbd></td>
+          <td>Reset FOV (90), fly speed (5) and tilt (0)</td>
+        </tr>
+        <tr>
+          <td><kbd>R</kbd> / <kbd>F</kbd></td>
+          <td>Fly up / down</td>
+        </tr>
+        <tr>
+          <td><kbd>H</kbd></td>
+          <td>Toggle the HUD</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><code>exec photomode_off</code> turns noclip and cheats off, resets the camera and restarts the round. Leave photo mode in open space: if you exit inside a wall, you stay stuck.</p>
+    <p class="note">After a map change, run <code>exec photomode</code> again.</p>
+
+    <h2 id="keybinds">Keybinds</h2>
+    <p>Photo mode rebinds <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>Alt</kbd> <kbd>R</kbd> <kbd>F</kbd> <kbd>H</kbd> <kbd>L</kbd>, the scroll wheel and middle click. <code>photomode_off.cfg</code> sets them back to Gold Rush's defaults, not to whatever you had.</p>
+    <p>If you've changed any of them, type <code>bind</code> and the key in the console before entering photo mode:</p>
+    <pre><code>bind ctrl
+"ctrl" = "+duck"</code></pre>
+    <p>Use the command you get (<code>+duck</code> in this example) for the bind in <code>photomode_off.cfg</code>.</p>
+    <p class="note">The game saves your binds when you quit. Run <code>exec photomode_off</code> before quitting, or photo mode's binds will still be there next time.</p>
+
+    <h2 id="graphics">Graphics settings</h2>
+    <p><code>photomode.cfg</code> raises a few detail settings:</p>
+    <ul>
+      <li><code>mat_picmip -10</code>: highest texture resolution. Uses more video memory.</li>
+      <li><code>r_rootlod 0</code>: full-detail models. May need a map reload to apply.</li>
+      <li><code>cl_detaildist 20000</code>: grass and other detail props stay visible far away.</li>
+    </ul>
+    <p><code>photomode_off.cfg</code> only sets <code>cl_detaildist</code> back to 1200. If you normally use other values for the first two, add them to its commented-out lines.</p>
+    <p class="note">Static props fade at distances set by each map, no console command can change that.</p>
+
+    <h2 id="sourceres">Higher-resolution screenshots</h2>
+    <p>SourceRes lets the game render at sizes your monitor doesn't support, in windowed mode only:</p>
+    <pre><code>sr_force 3840 2160
+screenshot</code></pre>
+    <p>For smoother edges, render at twice the size you need and scale the image down. To get back to normal, set your resolution again in the video options, or through a command: <code>mat_setvideomode 1920 1080 0</code> (fullscreen 1080p).</p>
+
+    <h2 id="files">Getting the full-quality files</h2>
+    <p>The copies in your Steam screenshot library are compressed. The game also saves each <code>screenshot</code> uncompressed, as a TGA file, in:</p>
+    <pre><code>steamapps\common\Team Fortress 2 Gold Rush\tf_goldrush\screenshots</code></pre>
+    <p><code>tga-to-png.bat</code> in that folder converts every TGA there to PNG and then deletes the TGA files. <strong>You must have <a href="https://imagemagick.org/script/download.php#windows">ImageMagick</a> 7 installed</strong>.</p>
+
+    <footer>
+      <p>SourceRes by <a href="https://github.com/jooonior/SourceRes">jooonior</a>, download on this page is a 64-bit build for your convenience.
+        Photo Mode by <a href="https://github.com/theothertored">theothertored</a> using <a href="https://claude.com/">Claude Opus 5.5</a>.</p>
+    </footer>
+  </main>
+
+</body>
+
+</html>

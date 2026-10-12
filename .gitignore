@@ -1,0 +1,3 @@
+# SourceRes source and build tree (only the compiled plugin in tf_goldrush/addons is published)
+/SourceRes/
+/.vscode/
