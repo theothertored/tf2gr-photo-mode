@@ -184,6 +184,15 @@
       background: var(--blu-hi);
     }
 
+
+    .red-text {
+      color: var(--red);
+    }
+
+    .blu-text {
+      color: var(--blu);
+    }
+
     .files {
       display: flex;
       flex-wrap: wrap;
@@ -212,13 +221,31 @@
     }
 
     .downloads .intro {
-      margin: 0 0 1rem;
+      margin: 0;
       color: var(--text);
       font-size: inherit;
     }
 
+    .downloads .choose {
+      margin: 0 0 1rem;
+    }
+
+    .downloads .choose li {
+      margin: 0;
+    }
+
+    .downloads .sourceres-note {
+      margin: 0 0 0.25rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .downloads .sourceres-note strong {
+      color: var(--muted);
+    }
+
     .downloads p {
-      margin: 0.75rem 0 0;
+      margin: 1rem 0 0;
       color: var(--muted);
       font-size: 0.95rem;
     }
@@ -359,16 +386,33 @@
     </p>
 
     <section class="downloads" aria-label="Downloads">
-      <p class="intro">Choose <strong>with SourceRes</strong> if you want to take screenshots in higher or unusual resolutions (e.g. 4K on a 1080p screen, phone wallpapers), <strong>without SourceRes</strong> otherwise. You can also download the individual files below.</p>
+      <p class="intro">
+        Choose:
+      </p>
+      <ul class="choose">
+        <li>
+          <div>
+            <strong class="red-text">with SourceRes</strong> if you want to take screenshots
+            in higher or unusual resolutions (e.g. 4K on a 1080p screen, phone wallpapers)
+          </div>
+          <div class="sourceres-note">
+            <strong>NOTE:</strong> This page provides a <strong>64 bit build of SourceRes</strong> for your convenience, which is not the same as the original SourceRes plugin.
+          </div>
+        </li>
+        <li>
+          <strong class="blu-text">without SourceRes</strong> otherwise.<br />
+        </li>
+      </ul>
       <div class="big">
         <a class="btn red" href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/tf2gr-photo-mode.zip">Download ZIP<small>with SourceRes</small></a>
         <a class="btn blu" href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/tf2gr-photo-mode-no-sourceres.zip">Download ZIP<small>without SourceRes</small></a>
       </div>
+      <p>You can also download individual files:</p>
       <ul class="files">
         <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/photomode.cfg">photomode.cfg</a></li>
         <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/photomode_off.cfg">photomode_off.cfg</a></li>
         <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/photomode.nut">photomode.nut</a></li>
-        <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/SourceRes.zip">SourceRes</a></li>
+        <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/SourceRes.zip">SourceRes (64 bit build)</a></li>
         <li><a href="https://github.com/theothertored/tf2gr-photo-mode/releases/latest/download/tga-to-png.bat">tga-to-png.bat</a></li>
       </ul>
       <p>Latest release. <a href="https://github.com/theothertored/tf2gr-photo-mode">Source and older versions on GitHub</a>.</p>
